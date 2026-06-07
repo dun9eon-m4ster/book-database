@@ -11,7 +11,17 @@ enum class Genre { Fiction, NonFiction, SciFi, Biography, Mystery, Unknown };
 // Ваш код для constexpr преобразования строк в enum::Genre и наоборот здесь
 
 constexpr Genre GenreFromString(std::string_view s) {
-    // Ваш код здесь
+    if (s == "Fiction")
+        return Genre::Fiction;
+    if (s == "NonFiction")
+        return Genre::NonFiction;
+    if (s == "SciFi")
+        return Genre::SciFi;
+    if (s == "Biography")
+        return Genre::Biography;
+    if (s == "Mystery")
+        return Genre::Mystery;
+
     return Genre::Unknown;
 }
 
@@ -26,6 +36,8 @@ struct Book {
     int read_count;
 
     // Ваш код для конструкторов здесь
+    constexpr Book(const Genre &_new_genre) : genre(_new_genre) {}
+    constexpr Book(const std::string_view &_new_genre_str) : genre(GenreFromString(_new_genre_str)) {}
 };
 }  // namespace bookdb
 
@@ -58,5 +70,17 @@ struct formatter<bookdb::Genre, char> {
 };
 
 // Ваш код для std::formatter<Book> здесь
+template <>
+struct formatter<bookdb::Book, char> {
+    template <typename FormatContext>
+    auto format(const bookdb::Book &book, FormatContext &context) const {
+        return format_to(context.out(), "author: {}, title: {}, year: {}, genre: {}, rating: {}, read count: {}",
+                         book.author, book.title, book.year, book.genre, book.rating, book.read_count);
+    }
+
+    constexpr auto parse(format_parse_context &ctx) {
+        return ctx.begin();  // Просто игнорируем пользовательский формат
+    }
+};
 
 }  // namespace std
