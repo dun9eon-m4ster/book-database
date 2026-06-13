@@ -78,9 +78,7 @@ struct formatter<bookdb::Book, char> {
                          book.author, book.title, book.year, book.genre, book.rating, book.read_count);
     }
 
-    constexpr auto parse(format_parse_context &ctx) {
-        return ctx.begin();  // Просто игнорируем пользовательский формат
-    }
+    constexpr auto parse(format_parse_context &ctx) { return ctx.begin(); }
 };
 
 }  // namespace std
