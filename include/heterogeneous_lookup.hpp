@@ -1,8 +1,5 @@
 #pragma once
 
-#include "book.hpp"
-#include "comparators.hpp"
-#include <functional>
 #include <string>
 #include <string_view>
 
@@ -11,31 +8,23 @@ namespace bookdb {
 struct TransparentStringLess {
     using is_transparent = void;
 
-    bool operator()(const Book &book, const std::string &title) const { return comp::LessByTitle()(book, title); }
-    bool operator()(const std::string &title, const Book &book) const { return comp::LessByTitle()(title, book); }
-
-    bool operator()(const Book &book, const std::string_view &author) const {
-        return comp::LessByAuthor()(book, author);
-    }
-    bool operator()(const std::string_view &author, const Book &book) const {
-        return comp::LessByAuthor()(author, book);
-    }
+    bool operator()(const std::string_view &first, const std::string_view &second) const { return first < second; }
 };
 
 struct TransparentStringEqual {
     using is_transparent = void;
 
-    bool operator()(const Book &book, const std::string &title) const { return book.title == title; }
-    bool operator()(const std::string &title, const Book &book) const { return title == book.title; }
-
-    bool operator()(const Book &book, const std::string_view &author) const { return book.author == author; }
-    bool operator()(const std::string_view &author, const Book &book) { return author == book.author; }
+    bool operator()(std::string_view first, std::string_view second) const { return first == second; }
 };
 
 struct TransparentStringHash {
     using is_transparent = void;
 
-    //???
+    size_t operator()(std::string_view str) const { return std::hash<std::string_view>{}(str); }
+
+    size_t operator()(const std::string &str) const { return std::hash<std::string_view>{}(str); }
+
+    size_t operator()(const char *str) const { return std::hash<std::string_view>{}(str); }
 };
 
 }  // namespace bookdb
