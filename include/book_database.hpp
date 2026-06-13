@@ -3,6 +3,7 @@
 #include <print>
 #include <string>
 #include <string_view>
+#include <unordered_map>
 #include <vector>
 
 #include "book.hpp"
@@ -15,10 +16,9 @@ template <BookContainerLike BookContainer = std::vector<Book>>
 class BookDatabase {
 public:
     // Type aliases
+    using iterator = BookContainer::iterator;
 
-    // Ваш код здесь
-
-    using AuthorContainer = BookContainer /* Ваш код здесь */;
+    using AuthorContainer = std::unordered_map<std::string, TransparentStringHash, TransparentStringEqual>;
 
     BookDatabase() = default;
 
@@ -28,8 +28,8 @@ public:
     }
 
     // Standard container interface methods
-
-    // Ваш код здесь
+    iterator begin() { return books_.begin(); }
+    iterator end() { return books_.end(); }
 
 private:
     BookContainer books_;
