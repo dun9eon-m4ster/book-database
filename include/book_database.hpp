@@ -1,6 +1,8 @@
 #pragma once
 
+#include <algorithm>
 #include <format>
+#include <initializer_list>
 #include <string>
 #include <string_view>
 #include <unordered_set>
@@ -23,6 +25,10 @@ public:
     using AuthorContainer = std::unordered_set<std::string, TransparentStringHash, TransparentStringEqual>;
 
     BookDatabase() = default;
+
+    BookDatabase(std::initializer_list<Book> book_list) {
+        std::for_each(book_list.begin(), book_list.end(), [this](const Book &book) { PushBack(book); });
+    }
 
     void PushBack(const Book &_new_book) {
         auto copy = _new_book;
