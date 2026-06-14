@@ -36,8 +36,17 @@ struct Book {
     int read_count;
 
     // Ваш код для конструкторов здесь
-    constexpr Book(const Genre &_new_genre) : genre(_new_genre) {}
-    constexpr Book(const std::string_view &_new_genre_str) : genre(GenreFromString(_new_genre_str)) {}
+
+    constexpr Book() = default;
+
+    constexpr Book(std::string_view _new_title, std::string_view _new_author, int _new_year, Genre _new_genre,
+                   double _new_rating, int _new_read_count)
+        : author(_new_author), title(_new_title), year(_new_year), genre(_new_genre), rating(_new_rating),
+          read_count(_new_read_count) {}
+
+    constexpr Book(std::string_view _new_title, std::string_view _new_author, int _new_year,
+                   std::string_view _new_genre, double _new_rating, int _new_read_count)
+        : Book(_new_title, _new_author, _new_year, GenreFromString(_new_genre), _new_rating, _new_rating) {}
 };
 }  // namespace bookdb
 
@@ -74,7 +83,8 @@ template <>
 struct formatter<bookdb::Book, char> {
     template <typename FormatContext>
     auto format(const bookdb::Book &book, FormatContext &context) const {
-        return format_to(context.out(), "author: {}, title: {}, year: {}, genre: {}, rating: {}, read count: {}",
+        return format_to(context.out(),
+                         "author: {},\t title: {},\t year: {},\t genre: {},\t rating: {},\t read count: {}",
                          book.author, book.title, book.year, book.genre, book.rating, book.read_count);
     }
 
