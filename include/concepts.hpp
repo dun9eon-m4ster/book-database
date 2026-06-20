@@ -8,7 +8,12 @@
 namespace bookdb {
 
 template <typename T>
-concept BookContainerLike = true;
+concept BookContainerLike = std::ranges::contiguous_range<T> && std::same_as<std::ranges::range_value_t<T>, Book> &&
+                            requires(T cont, Book book) {
+                                cont.size();
+                                cont.clear();
+                                cont.push_back(book);
+                            };
 
 template <typename T>
 concept BookIterator = true;
